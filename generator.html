@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generator</title>
+</head>
+<body>
+  <button onclick="handleGenerator()">handleGenerator</button>
+  <h3>value:</h3>
+  <div id="generator">test</div>
+</body>
+<script>
+  function handleGenerator() {
+    let inc = generator.next();
+
+    document.getElementById("generator").innerText = JSON.stringify(inc);
+  };
+
+  function* generateSequence() {
+    yield 1;
+    yield 2;
+    return 3;
+  }
+
+  let generator = generateSequence();
+</script>
+</html>

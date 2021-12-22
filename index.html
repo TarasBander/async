@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Playground</title>
+</head>
+<body>
+  <div id="async">test</div>
+  <button (click)="handleGenerator()">handleGenerator</button>
+</body>
+<script>
+  function handleGenerator() {
+    console.log(1);
+  };
+const ws = new WebSocket('ws://localhost:9898/');
+ws.onopen = function() {
+    console.log('WebSocket Client Connected');
+    ws.send('Hi this is web client.');
+};
+ws.onmessage = function(e) {
+  document.write(`<h3>${e.data}</h3>`);
+};
+</script>
+
+<script id="worker1" type="javascript/worker">
+  self.onmessage = function(e) {
+    setTimeout(()=> {
+      console.log('setTimeout after 0 miliseconds worker 1');
+    }, 0);
+    console.log('worker 1');
+    self.postMessage('msg from worker');
+  };
+</script>
+<script>
+  var blob = new Blob([
+    document.querySelector('#worker1').textContent
+  ], { type: "text/javascript" })
+
+  setTimeout(()=> {
+    console.log('setTimeout after 0 miliseconds');
+  }, 0);
+  // for Chrome 10+.
+  var worker = new Worker(window.URL.createObjectURL(blob));
+  worker.onmessage = function(e) {
+    setTimeout(()=> {
+      console.log('setTimeout on message');
+    }, 0);
+    console.log("Received: " + e.data);
+  }
+  worker.postMessage("hello"); // Start the worker.
+</script>
+</html>
